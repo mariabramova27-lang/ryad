@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Задачник · Ряды и их сходимость · Мягкая математика</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --dark:#0F1A2E;
+    --teal:#2AB7A9;
+    --gold:#F4A261;
+    --white:#FFFFFF;
+    --soft:#f6f9fb;
+    --line:rgba(15,26,46,.12);
+    --purple:#7c5cff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:24px 16px 130px;
+    font-family:'Open Sans', system-ui, sans-serif;
+    background:var(--soft); color:var(--dark);
+    line-height:1.6; font-size:15px;
+  }
+  .page{
+    max-width:960px; margin:0 auto;
+    background:#fff; border-radius:18px;
+    padding:30px 34px 44px;
+    box-shadow:0 12px 40px rgba(15,26,46,.08);
+  }
+  h1,h2,h3,h4{font-family:'Montserrat',sans-serif; margin:0 0 .5em; line-height:1.25;}
+  h1{font-size:26px; font-weight:800;}
+  h2{font-size:20px; font-weight:700; padding:10px 0 8px 14px;
+     border-left:5px solid var(--teal); margin-top:42px;
+     background:linear-gradient(90deg,rgba(42,183,169,.08),transparent);}
+  h2 .num{
+    display:inline-block; min-width:30px; text-align:center;
+    background:var(--teal); color:#fff; border-radius:8px;
+    font-size:14px; padding:3px 9px; margin-right:10px;
+  }
+  h3{font-size:16.5px; font-weight:700; margin-top:26px; color:#1a2b48;}
+  h3::before{content:"▸ "; color:var(--teal);}
+  .badge{
+    display:inline-block; font-family:'Montserrat',sans-serif;
+    font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase;
+    color:#fff; background:var(--dark); padding:5px 11px; border-radius:20px;
+    margin-bottom:14px;
+  }
+  .lead{color:#41546f; font-size:14.5px; margin-top:-4px;}
+
+  /* Интерактивная схема */
+  .navigator-box {
+    background: var(--dark);
+    color: var(--white);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 20px 0;
+    box-shadow: 0 8px 25px rgba(15,26,46,0.15);
+  }
+  .nav-step { display: none; animation: fadeIn 0.4s; }
+  .nav-step.active { display: block; }
+  .nav-question { font-size: 18px; font-weight: 600; margin-bottom: 15px; text-align: center; }
+  .nav-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+  .nav-btn {
+    background: var(--teal); color: var(--dark);
+    border: none; padding: 12px 24px; border-radius: 10px;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .nav-btn:hover { background: var(--gold); transform: translateY(-2px); }
+  .nav-result { text-align: center; padding: 20px; background: rgba(42,183,169,0.1); border-radius: 10px; border-left: 4px solid var(--teal); }
+  .nav-result h4 { color: var(--teal); margin-bottom: 10px; }
+  .nav-reset { background: transparent; border: 1px solid var(--white); color: var(--white); margin-top: 15px; font-size: 12px; padding: 8px 16px; }
+  .nav-reset:hover { background: var(--white); color: var(--dark); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Эталонные ряды */
+  .ref-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px; }
+  .ref-card {
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 12px; overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .ref-card:hover { box-shadow: 0 6px 18px rgba(15,26,46,.06); }
+  .ref-card summary {
+    padding: 15px 20px; background: #f9fbfd; cursor: pointer;
+    font-weight: 600; list-style: none; display: flex; justify-content: space-between; align-items: center;
+    border-left: 4px solid var(--teal);
+  }
+  .ref-card summary::-webkit-details-marker { display: none; }
+  .ref-card summary::after { content: "▼"; font-size: 10px; color: var(--teal); transition: transform 0.3s; }
+  .ref-card[open] summary::after { transform: rotate(180deg); }
+  .ref-card .ref-content { padding: 15px 20px; font-size: 14px; border-top: 1px solid var(--line); }
+
+  .theory{
+    background:linear-gradient(135deg,#eef8f7,#f6fbfa);
+    border:1px solid rgba(42,183,169,.35);
+    border-left:5px solid var(--teal);
+    border-radius:12px; padding:16px 20px; margin:16px 0 20px;
+  }
+  .theory h4{font-family:'Montserrat',sans-serif; font-size:12.5px; text-transform:uppercase; letter-spacing:.7px; color:#1e8d82; margin-bottom:8px;}
+
+  .task{
+    background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:14px 16px; margin:12px 0;
+    transition:box-shadow .2s ease;
+  }
+  .task:hover{box-shadow:0 6px 18px rgba(15,26,46,.06);}
+  .task .head{display:flex; gap:10px; align-items:flex-start;}
+  .task .n{
+    flex:0 0 auto; font-family:'Montserrat',sans-serif;
+    background:var(--dark); color:#fff; font-size:12px;
+    padding:3px 8px; border-radius:6px;
+  }
+  .task .body{flex:1; min-width:0;}
+
+  .hint{margin-top:8px;}
+  .hint summary{cursor:pointer; font-size:13px; color:#1e8d82; list-style:none; user-select:none; font-weight:600;}
+  .hint summary::-webkit-details-marker{display:none;}
+  .hint summary::before{content:"💡 ";}
+  .hint[open] summary{color:#b56a1f;}
+  .hint .content{
+    background:#f4fbfa; border-left:3px solid var(--teal);
+    border-radius:0 8px 8px 0; padding:9px 12px; margin-top:8px;
+    font-size:13.5px; color:#2c3d55;
+  }
+  .hint.solution summary::before{content:"✅ ";}
+  .hint.solution .content{background:#fff5e8; border-color:var(--gold);}
+  
+  .answer summary::before{content:"🔍 ";}
+  .answer .content{background:#f4fbfa; border-color:var(--teal); font-weight:600;}
+
+  .print-btn{
+    position:fixed; right:20px; bottom:20px; z-index:50;
+    background:var(--gold); color:#fff; border:none;
+    font-family:'Montserrat',sans-serif; font-weight:700; font-size:14px;
+    padding:13px 20px; border-radius:14px; cursor:pointer;
+    box-shadow:0 10px 22px rgba(244,162,97,.4);
+  }
+
+  /* Рекламный фон */
+  .mm-ads-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    display:flex; align-items:flex-end; justify-content:center;
+    padding:0 0 18px 0; font-family:'Open Sans',system-ui,sans-serif;
+    text-align:center; user-select:none; overflow:hidden;
+  }
+  .mm-ads-watermark{
+    position:absolute; inset:-40%; transform:rotate(-22deg);
+    display:flex; flex-direction:column; justify-content:space-around;
+    opacity:.055; pointer-events:none;
+  }
+  .mm-ads-watermark__row{
+    font-family:'Montserrat',sans-serif; font-size:38px;
+    font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+    color:#0F1A2E; white-space:nowrap; text-align:center; line-height:1.6;
+  }
+  .mm-ads-bg__inner{
+    position:relative; z-index:2; max-width:900px;
+    line-height:1.5; font-size:12px;
+    background:linear-gradient(180deg,rgba(15,26,46,0) 0%,rgba(15,26,46,.65) 100%);
+    color:#fff; padding:14px 22px 10px;
+    border-radius:14px 14px 0 0; opacity:.30;
+  }
+  .mm-ads-bg__line{display:block;}
+  .mm-ads-bg a{color:#7fe3d6; text-decoration:none; border-bottom:1px dotted #7fe3d6; pointer-events:auto;}
+  .mm-ads-bg a:hover{color:#F4A261;}
+  body > *:not(.mm-ads-bg){position:relative; z-index:1;}
+
+  @media print{
+    body{background:#fff; padding:0;}
+    .page{box-shadow:none; border-radius:0; padding:14px 6px;}
+    .print-btn{display:none;}
+    .mm-ads-watermark{opacity:.035;}
+    .mm-ads-bg__inner{opacity:.5;}
+    h2{page-break-after:avoid;}
+    .task{page-break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <span class="badge">Мягкая математика · Математический анализ</span>
+  <h1>Задачник: Ряды и их сходимость</h1>
+  <p class="lead">
+     Навигатор, эталонные ряды, 
+    6 ключевых фактов с задачами и подробными решениями.
+  </p>
+
+  <!-- =========================================================
+       ИНТЕРАКТИВНАЯ СХЕМА (НАВИГАТОР)
+  ========================================================== -->
+  <h2><span class="num">🧭</span>Интерактивный навигатор</h2>
+  <p class="lead">Не знаешь, какой признак применить? Пройди по шагам.</p>
+  
+  <div class="navigator-box">
+    <!-- Шаг 1 -->
+    <div class="nav-step active" id="step-1">
+      <div class="nav-question">Шаг 1: Выполняется ли необходимое условие?<br>\(\lim_{n \to \infty} a_n = 0\)?</div>
+      <div class="nav-buttons">
+        <button class="nav-btn" onclick="showStep(2)">Да, предел равен 0</button>
+        <button class="nav-btn" onclick="showResult('diverges-limit')">Нет, предел не равен 0</button>
+      </div>
+    </div>
+
+    <!-- Шаг 2 -->
+    <div class="nav-step" id="step-2">
+      <div class="nav-question">Шаг 2: Есть ли в ряде чередование знаков?<br>Например: \(\sum (-1)^n a_n\)</div>
+      <div class="nav-buttons">
+        <button class="nav-btn" onclick="showResult('leibniz')">Да, знакочередующийся</button>
+        <button class="nav-btn" onclick="showStep(3)">Нет, все члены положительны</button>
+      </div>
+    </div>
+
+    <!-- Шаг 3 -->
+    <div class="nav-step" id="step-3">
+      <div class="nav-question">Шаг 3: Что представляет собой общий член \(a_n\)?</div>
+      <div class="nav-buttons">
+        <button class="nav-btn" onclick="showResult('dalamber')">Есть факториалы или \(a^n\)</button>
+        <button class="nav-btn" onclick="showResult('cauchy')">Всё выражение в \(n\)-й степени</button>
+        <button class="nav-btn" onclick="showResult('compare')">Дробь из многочленов</button>
+        <button class="nav-btn" onclick="showResult('integral')">Есть логарифмы или легко интегрируется</button>
+      </div>
+    </div>
+
+    <!-- Результаты -->
+    <div class="nav-step nav-result" id="res-diverges-limit">
+      <h4>❌ Ряд расходится</h4>
+      <p>Необходимый признак не выполнен. Если предел общего члена не равен нулю (или не существует), ряд расходится. Дальше исследовать не нужно.</p>
+      <button class="nav-btn nav-reset" onclick="showStep(1)">Начать заново</button>
+    </div>
+
+    <div class="nav-step nav-result" id="res-leibniz">
+      <h4>⚖️ Признак Лейбница</h4>
+      <p>Проверь два условия: 1) Члены убывают по модулю (\(a_n > a_{n+1}\)). 2) Предел равен нулю. Если оба выполнены — ряд сходится (условно или абсолютно). Также проверь ряд из модулей \(\sum |a_n|\) на абсолютную сходимость.</p>
+      <button class="nav-btn nav-reset" onclick="showStep(1)">Начать заново</button>
+    </div>
+
+    <div class="nav-step nav-result" id="res-dalamber">
+      <h4>📈 Признак Даламбера</h4>
+      <p>Ищи предел \(\lim \frac{a_{n+1}}{a_n} = q\). Если \(q < 1\) — сходится, если \(q > 1\) — расходится. Если \(q=1\), признак не работает (нужен другой).</p>
+      <button class="nav-btn nav-reset" onclick="showStep(1)">Начать заново</button>
+    </div>
+
+    <div class="nav-step nav-result" id="res-cauchy">
+      <h4>📉 Радикальный признак Коши</h4>
+      <p>Ищи предел \(\lim \sqrt[n]{a_n} = q\). Если \(q < 1\) — сходится, если \(q > 1\) — расходится. Если \(q=1\), признак не работает.</p>
+      <button class="nav-btn nav-reset" onclick="showStep(1)">Начать заново</button>
+    </div>
+
+    <div class="nav-step nav-result" id="res-compare">
+      <h4>⚖️ Признак сравнения</h4>
+      <p>Отбрось младшие степени в числителе и знаменателе. Сравни с обобщенным гармоническим рядом \(\sum \frac{1}{n^p}\). Если \(p > 1\) — сходится, если \(p \le 1\) — расходится.</p>
+      <button class="nav-btn nav-reset" onclick="showStep(1)">Начать заново</button>
+    </div>
+
+    <div class="nav-step nav-result" id="res-integral">
+      <h4>∫ Интегральный признак Коши</h4>
+      <p>Замени \(n\) на \(x\) и вычисли несобственный интеграл \(\int_1^\infty f(x) dx\). Если интеграл сходится, то и ряд сходится. Если расходится — ряд расходится.</p>
+      <button class="nav-btn nav-reset" onclick="showStep(1)">Начать заново</button>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       ЭТАЛОННЫЕ РЯДЫ
+  ========================================================== -->
+  <h2><span class="num">🏛️</span>Эталонные ряды</h2>
+  <p class="lead">Эти ряды нужно знать наизусть. На них мы опираемся при сравнении.</p>
+
+  <div class="ref-grid">
+    <details class="ref-card">
+      <summary>Геометрический ряд \(\sum_{n=1}^{\infty} q^n\)</summary>
+      <div class="ref-content">
+        <p><b>Сходимость:</b> Сходится при \(|q| < 1\). Расходится при \(|q| \ge 1\).</p>
+        <p><b>Сумма:</b> \(S = \frac{q}{1-q}\) (при \(|q|<1\)).</p>
+        <p><i>Разбор:</i> Частичная сумма \(S_n = q \frac{1-q^n}{1-q}\). Если \(|q|<1\), то \(q^n \to 0\), и предел существует. Если \(|q| \ge 1\), предел не существует.</p>
+      </div>
+    </details>
+
+    <details class="ref-card">
+      <summary>Гармонический ряд \(\sum_{n=1}^{\infty} \frac{1}{n}\)</summary>
+      <div class="ref-content">
+        <p><b>Сходимость:</b> <b>Расходится</b> (хотя общий член стремится к нулю!).</p>
+        <p><i>Разбор:</i> Применим интегральный признак Коши. \(\int_1^\infty \frac{dx}{x} = \ln x \Big|_1^\infty = \infty\). Интеграл расходится \(\Rightarrow\) ряд расходится.</p>
+      </div>
+    </details>
+
+    <details class="ref-card">
+      <summary>Обобщенный гармонический (ряд Дирихле) \(\sum_{n=1}^{\infty} \frac{1}{n^p}\)</summary>
+      <div class="ref-content">
+        <p><b>Сходимость:</b> Сходится при \(p > 1\). Расходится при \(p \le 1\).</p>
+        <p><i>Разбор:</i> Интеграл \(\int_1^\infty \frac{dx}{x^p}\). Если \(p \neq 1\), интеграл равен \(\frac{x^{1-p}}{1-p} \Big|_1^\infty\). Он сходится, только если \(1-p < 0\), то есть \(p > 1\).</p>
+      </div>
+    </details>
+
+    <details class="ref-card">
+      <summary>Знакочередующийся гармонический \(\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n}\)</summary>
+      <div class="ref-content">
+        <p><b>Сходимость:</b> <b>Условно сходится</b>.</p>
+        <p><i>Разбор:</i> Ряд из модулей — это обычный гармонический ряд, который расходится (нет абсолютной сходимости). Но по признаку Лейбница: члены убывают (\(1 > 1/2 > 1/3\dots\)) и стремятся к 0. Значит, сам ряд сходится, но условно.</p>
+      </div>
+    </details>
+
+    <details class="ref-card">
+      <summary>Телескопический ряд \(\sum_{n=1}^{\infty} \frac{1}{n(n+1)}\)</summary>
+      <div class="ref-content">
+        <p><b>Сходимость:</b> Сходится (сумма равна 1).</p>
+        <p><i>Разбор:</i> Разложим на простейшие дроби: \(\frac{1}{n(n+1)} = \frac{1}{n} - \frac{1}{n+1}\).<br>
+        Частичная сумма \(S_n = (1 - 1/2) + (1/2 - 1/3) + \dots + (1/n - 1/(n+1)) = 1 - \frac{1}{n+1}\).<br>
+        \(\lim S_n = 1\).</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ФАКТ 1 -->
+  <h2 id="t1"><span class="num">1</span>Необходимый признак сходимости</h2>
+  <div class="theory">
+    <h4>Факт</h4>
+    <p>Если ряд \(\sum_{n=1}^{\infty} a_n\) сходится, то \(\lim_{n \to \infty} a_n = 0\). <br>
+    <b>Следствие (для расходимости):</b> Если \(\lim_{n \to \infty} a_n \neq 0\) или не существует, то ряд расходится.</p>
+  </div>
+
+  <h3>Разобранные задачи</h3>
+  <div class="task">
+    <div class="head"><div class="n">1.1</div><div class="body">
+      Исследовать на сходимость: \(\sum_{n=1}^{\infty} \frac{n}{n+1}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Найдем предел общего члена: \(\lim_{n \to \infty} \frac{n}{n+1} = 1\).<br>
+        Так как предел не равен нулю (\(1 \neq 0\)), то по необходимому признаку ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">1.2</div><div class="body">
+      Исследовать на сходимость: \(\sum_{n=1}^{\infty} \sin\left(\frac{\pi n}{2}\right)\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Общий член принимает значения \(1, 0, -1, 0, \dots\)<br>
+        Предел \(\lim_{n \to \infty} \sin\left(\frac{\pi n}{2}\right)\) не существует. Следовательно, ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">1.3</div><div class="body">
+      Исследовать на сходимость: \(\sum_{n=1}^{\infty} \left(1 + \frac{1}{n}\right)^n\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Предел общего члена — это второй замечательный предел: \(\lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e\).<br>
+        Так как \(e \neq 0\), ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+
+  <h3>Для самостоятельного решения</h3>
+  <div class="task"><div class="head"><div class="n">1.4</div><div class="body">\(\sum_{n=1}^{\infty} \arctan(n)\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Предел \(\pi/2 \neq 0\). Ряд расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">1.5</div><div class="body">\(\sum_{n=1}^{\infty} \cos\left(\frac{1}{n}\right)\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Предел \(\cos(0) = 1 \neq 0\). Ряд расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">1.6</div><div class="body">\(\sum_{n=1}^{\infty} \frac{n^2 + 2}{2n^2 - 1}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Предел \(1/2 \neq 0\). Ряд расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">1.7</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(-1)^n \cdot n}{2n - 1}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Предел \(\pm 1/2 \neq 0\). Ряд расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">1.8</div><div class="body">\(\sum_{n=1}^{\infty} \sqrt[n]{2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Предел \(\lim 2^{1/n} = 1 \neq 0\). Ряд расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">1.9</div><div class="body">\(\sum_{n=1}^{\infty} \ln\left(\frac{n+1}{n}\right)\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Общий член \(\ln(1 + 1/n) \to 0\). Необходимый признак выполняется! (Но ряд расходится, т.к. это телескопическая сумма \(\ln(n+1) \to \infty\)).</div></details></div></div></div>
+
+  <!-- ФАКТ 2 -->
+  <h2 id="t2"><span class="num">2</span>Признаки сравнения</h2>
+  <div class="theory">
+    <h4>Факт</h4>
+    <p><b>Первый признак:</b> Если \(0 \le a_n \le b_n\) и \(\sum b_n\) сходится, то \(\sum a_n\) тоже сходится. Если \(\sum a_n\) расходится, то \(\sum b_n\) тоже расходится.<br>
+    <b>Предельный признак:</b> Если \(\lim_{n \to \infty} \frac{a_n}{b_n} = k\) (\(0 < k < \infty\)), то ряды ведут себя одинаково.<br>
+    <i>Эталон:</i> Обобщенный гармонический ряд \(\sum \frac{1}{n^p}\) сходится при \(p > 1\) и расходится при \(p \le 1\).</p>
+  </div>
+
+  <h3>Разобранные задачи</h3>
+  <div class="task">
+    <div class="head"><div class="n">2.1</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \sin\left(\frac{1}{n}\right)\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Сравним с гармоническим рядом \(\sum \frac{1}{n}\). Так как \(\sin x \sim x\) при \(x \to 0\), то \(\lim_{n \to \infty} \frac{\sin(1/n)}{1/n} = 1\).<br>
+        По предельному признаку ряды ведут себя одинаково. Гармонический ряд (\(p=1\)) расходится, значит, исходный ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">2.2</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{1}{2^n + n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Очевидно, что \(\frac{1}{2^n + n} < \frac{1}{2^n}\) для всех \(n \ge 1\).<br>
+        Ряд \(\sum \frac{1}{2^n}\) — это бесконечно убывающая геометрическая прогрессия со знаменателем \(q = 1/2 < 1\), она сходится.<br>
+        По первому признаку сравнения исходный ряд <b>сходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">2.3</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{n+1}{n^3 + 2n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        При больших \(n\) числитель ведет себя как \(n\), а знаменатель как \(n^3\). То есть \(a_n \sim \frac{n}{n^3} = \frac{1}{n^2}\).<br>
+        Сравним с рядом \(\sum \frac{1}{n^2}\) (сходится, \(p=2 > 1\)).<br>
+        \(\lim_{n \to \infty} \frac{\frac{n+1}{n^3 + 2n}}{\frac{1}{n^2}} = \lim \frac{n^3+n^2}{n^3+2n} = 1\).<br>
+        Предел конечен и не равен нулю. Ряды ведут себя одинаково. Исходный ряд <b>сходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+
+  <h3>Для самостоятельного решения</h3>
+  <div class="task"><div class="head"><div class="n">2.4</div><div class="body">\(\sum_{n=1}^{\infty} \frac{1}{\sqrt{n} + n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Сравнить с \(\frac{1}{n}\). Сходится при \(p=1\)? Нет, расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">2.5</div><div class="body">\(\sum_{n=1}^{\infty} \frac{2 + \cos n}{n^2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Сравнить с \(\frac{3}{n^2}\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">2.6</div><div class="body">\(\sum_{n=1}^{\infty} \frac{1}{n \cdot 2^n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Сравнить с \(\frac{1}{2^n}\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">2.7</div><div class="body">\(\sum_{n=1}^{\infty} \frac{\ln n}{n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Сравнить с \(\frac{1}{n}\) (т.к. \(\ln n > 1\) при \(n>2\)). Расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">2.8</div><div class="body">\(\sum_{n=1}^{\infty} \frac{1}{n^2 - 3n + 5}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Эквивалентно \(\frac{1}{n^2}\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">2.9</div><div class="body">\(\sum_{n=1}^{\infty} \left(\frac{n}{3n+1}\right)^2\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Эквивалентно \(\frac{1}{9}\). Общий член не стремится к 0. Расходится.</div></details></div></div></div>
+
+  <!-- ФАКТ 3 -->
+  <h2 id="t3"><span class="num">3</span>Признаки Даламбера и Коши</h2>
+  <div class="theory">
+    <h4>Факт</h4>
+    <p><b>Даламбер:</b> \(\lim_{n \to \infty} \frac{a_{n+1}}{a_n} = q\). Если \(q<1\) — сходится, \(q>1\) — расходится.<br>
+    <b>Коши (радикальный):</b> \(\lim_{n \to \infty} \sqrt[n]{a_n} = q\). Если \(q<1\) — сходится, \(q>1\) — расходится.</p>
+  </div>
+
+  <h3>Разобранные задачи</h3>
+  <div class="task">
+    <div class="head"><div class="n">3.1</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{n!}{3^n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Применим признак Даламбера:<br>
+        \(\frac{a_{n+1}}{a_n} = \frac{(n+1)!}{3^{n+1}} \cdot \frac{3^n}{n!} = \frac{n+1}{3}\).<br>
+        \(\lim_{n \to \infty} \frac{n+1}{3} = \infty > 1\). Ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">3.2</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \left(\frac{n}{2n+1}\right)^n\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Применим радикальный признак Коши:<br>
+        \(\sqrt[n]{a_n} = \frac{n}{2n+1}\).<br>
+        \(\lim_{n \to \infty} \frac{n}{2n+1} = \frac{1}{2} < 1\). Ряд <b>сходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">3.3</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{5^n}{n!}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Применим признак Даламбера:<br>
+        \(\frac{a_{n+1}}{a_n} = \frac{5^{n+1}}{(n+1)!} \cdot \frac{n!}{5^n} = \frac{5}{n+1}\).<br>
+        \(\lim_{n \to \infty} \frac{5}{n+1} = 0 < 1\). Ряд <b>сходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+
+  <h3>Для самостоятельного решения</h3>
+  <div class="task"><div class="head"><div class="n">3.4</div><div class="body">\(\sum_{n=1}^{\infty} \frac{2^n}{n^2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Даламбер: \(q=2 > 1\). Расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">3.5</div><div class="body">\(\sum_{n=1}^{\infty} \frac{n^3}{3^n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Даламбер: \(q=1/3 < 1\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">3.6</div><div class="body">\(\sum_{n=1}^{\infty} \left(\frac{3n+1}{4n-1}\right)^n\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Коши: предел \(3/4 < 1\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">3.7</div><div class="body">\(\sum_{n=1}^{\infty} \frac{n!}{(2n)!}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Даламбер: \(q = \lim \frac{n+1}{(2n+1)(2n+2)} = 0 < 1\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">3.8</div><div class="body">\(\sum_{n=1}^{\infty} \left(\frac{n-1}{n+1}\right)^{n^2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Коши: предел \(\left(\frac{n-1}{n+1}\right)^n \to e^{-2} < 1\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">3.9</div><div class="body">\(\sum_{n=1}^{\infty} \frac{n^n}{2^{n^2}}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Коши: предел \(\frac{n}{2^n} \to 0 < 1\). Сходится.</div></details></div></div></div>
+
+  <!-- ФАКТ 4 -->
+  <h2 id="t4"><span class="num">4</span>Интегральный признак Коши</h2>
+  <div class="theory">
+    <h4>Факт</h4>
+    <p>Если \(f(x)\) — непрерывная, положительная, монотонно убывающая функция и \(f(n) = a_n\), то ряд \(\sum a_n\) и интеграл \(\int_1^\infty f(x) dx\) сходятся или расходятся одновременно.</p>
+  </div>
+
+  <h3>Разобранные задачи</h3>
+  <div class="task">
+    <div class="head"><div class="n">4.1</div><div class="body">
+      Исследовать: \(\sum_{n=2}^{\infty} \frac{1}{n \ln n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Рассмотрим \(f(x) = \frac{1}{x \ln x}\). Интеграл:<br>
+        \(\int_2^\infty \frac{dx}{x \ln x} = \lim_{b \to \infty} \ln(\ln x) \Big|_2^b = \infty\).<br>
+        Интеграл расходится, значит, и ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">4.2</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{n}{n^2 + 1}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        \(f(x) = \frac{x}{x^2+1}\). Интеграл:<br>
+        \(\int_1^\infty \frac{x dx}{x^2+1} = \frac{1}{2} \int_1^\infty \frac{d(x^2+1)}{x^2+1} = \frac{1}{2} \lim_{b \to \infty} \ln(x^2+1) \Big|_1^b = \infty\).<br>
+        Интеграл расходится, ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">4.3</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{1}{n^2 + 1}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        \(f(x) = \frac{1}{x^2+1}\). Интеграл:<br>
+        \(\int_1^\infty \frac{dx}{x^2+1} = \arctan x \Big|_1^\infty = \frac{\pi}{2} - \frac{\pi}{4} = \frac{\pi}{4}\).<br>
+        Интеграл сходится (дает конечное число), значит, ряд <b>сходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+
+  <h3>Для самостоятельного решения</h3>
+  <div class="task"><div class="head"><div class="n">4.4</div><div class="body">\(\sum_{n=1}^{\infty} \frac{1}{n \sqrt[3]{n}}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Интеграл \(\int x^{-4/3} dx\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">4.5</div><div class="body">\(\sum_{n=1}^{\infty} n e^{-n^2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Интеграл \(\int x e^{-x^2} dx = -\frac{1}{2}e^{-x^2}\). Сходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">4.6</div><div class="body">\(\sum_{n=1}^{\infty} \frac{1}{\sqrt{n} + 1}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Интеграл \(\int x^{-1/2} dx\). Расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">4.7</div><div class="body">\(\sum_{n=1}^{\infty} \frac{1}{n^2 \ln n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Сравнить с \(\frac{1}{n^2}\). Сходится (интеграл сложнее, но сходится).</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">4.8</div><div class="body">\(\sum_{n=1}^{\infty} \frac{\ln n}{n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Интеграл \(\int \frac{\ln x}{x} dx = \frac{1}{2}\ln^2 x\). Расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">4.9</div><div class="body">\(\sum_{n=1}^{\infty} e^{-n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Геометрическая прогрессия \(q=1/e < 1\). Сходится.</div></details></div></div></div>
+
+  <!-- ФАКТ 5 -->
+  <h2 id="t5"><span class="num">5</span>Знакочередующиеся ряды. Признак Лейбница</h2>
+  <div class="theory">
+    <h4>Факт</h4>
+    <p><b>Признак Лейбница:</b> Ряд \(\sum_{n=1}^{\infty} (-1)^{n-1} a_n\) (где \(a_n > 0\)) сходится, если:<br>
+    1) \(a_n\) монотонно убывает (\(a_1 > a_2 > a_3 > \dots\))<br>
+    2) \(\lim_{n \to \infty} a_n = 0\).<br>
+    <i>Абсолютная сходимость:</i> если \(\sum |a_n|\) сходится. Если сам сходится, а модули расходятся — <i>условная</i>.</p>
+  </div>
+
+  <h3>Разобранные задачи</h3>
+  <div class="task">
+    <div class="head"><div class="n">5.1</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Ряд из модулей: \(\sum \frac{1}{n}\) — гармонический, расходится. Значит, абсолютной сходимости нет.<br>
+        Проверим Лейбница: \(a_n = 1/n\) убывает, \(\lim 1/n = 0\). Условия выполнены.<br>
+        Вывод: ряд сходится <b>условно</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">5.2</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^2}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Ряд из модулей \(\sum \frac{1}{n^2}\) сходится (\(p=2>1\)).<br>
+        Значит, исходный ряд сходится <b>абсолютно</b>.
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">5.3</div><div class="body">
+      Исследовать: \(\sum_{n=1}^{\infty} (-1)^{n-1} \frac{n}{n+1}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        Проверим предел общего члена: \(\lim_{n \to \infty} \frac{n}{n+1} = 1 \neq 0\).<br>
+        Не выполняется необходимое условие сходимости. Ряд <b>расходится</b>.
+      </div></details>
+    </div></div>
+  </div>
+
+  <h3>Для самостоятельного решения</h3>
+  <div class="task"><div class="head"><div class="n">5.4</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{\sqrt{n}}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Лейбниц выполняется. Модули (гармонический) расходятся. Условно.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">5.5</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(-1)^n}{n!}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Модули сходятся (Даламбер). Абсолютно.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">5.6</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(-1)^{n-1} \cdot 2n}{3n-1}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Предел \(2/3 \neq 0\). Расходится.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">5.7</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{2n-1}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Ряд Лейбница (знакопеременный гармонический). Условно.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">5.8</div><div class="body">\(\sum_{n=1}^{\infty} (-1)^{n-1} \sin\left(\frac{1}{n}\right)\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">\(\sin(1/n)\) убывает к 0. Модули ведут себя как \(1/n\) (расходятся). Условно.</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">5.9</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n \ln n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Модули расходятся (интегральный признак). Условно.</div></details></div></div></div>
+
+  <!-- ФАКТ 6 -->
+  <h2 id="t6"><span class="num">6</span>Степенные ряды. Радиус сходимости</h2>
+  <div class="theory">
+    <h4>Факт</h4>
+    <p>Степенной ряд \(\sum c_n (x-a)^n\). Радиус сходимости \(R\):<br>
+    По Даламберу: \(R = \lim_{n \to \infty} \left| \frac{c_n}{c_{n+1}} \right|\)<br>
+    По Коши: \(R = \frac{1}{\lim \sqrt[n]{|c_n|}}\).<br>
+    Интервал \((a-R, a+R)\). На концах нужна отдельная проверка.</p>
+  </div>
+
+  <h3>Разобранные задачи</h3>
+  <div class="task">
+    <div class="head"><div class="n">6.1</div><div class="body">
+      Найти область сходимости: \(\sum_{n=1}^{\infty} \frac{x^n}{n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        \(c_n = 1/n\). \(R = \lim \left| \frac{1/n}{1/(n+1)} \right| = \lim \frac{n+1}{n} = 1\).<br>
+        Интервал \((-1, 1)\).<br>
+        При \(x=1\): гармонический ряд \(\sum \frac{1}{n}\) (расходится).<br>
+        При \(x=-1\): знакочередующийся \(\sum \frac{(-1)^n}{n}\) (сходится по Лейбницу).<br>
+        Область: \([-1, 1)\).
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">6.2</div><div class="body">
+      Найти область сходимости: \(\sum_{n=1}^{\infty} \frac{(x-2)^n}{n \cdot 3^n}\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        \(c_n = \frac{1}{n 3^n}\). \(R = \lim \left| \frac{1/(n 3^n)}{1/((n+1)3^{n+1})} \right| = \lim \frac{3(n+1)}{n} = 3\).<br>
+        Центр \(a = 2\). Интервал \((2-3, 2+3) = (-1, 5)\).<br>
+        При \(x=5\): \(\sum \frac{3^n}{n 3^n} = \sum \frac{1}{n}\) (расходится).<br>
+        При \(x=-1\): \(\sum \frac{(-3)^n}{n 3^n} = \sum \frac{(-1)^n}{n}\) (сходится).<br>
+        Область: \([-1, 5)\).
+      </div></details>
+    </div></div>
+  </div>
+  <div class="task">
+    <div class="head"><div class="n">6.3</div><div class="body">
+      Найти область сходимости: \(\sum_{n=1}^{\infty} n! x^n\).
+      <details class="hint solution"><summary>Показать решение</summary><div class="content">
+        \(c_n = n!\). \(R = \lim \frac{n!}{(n+1)!} = \lim \frac{1}{n+1} = 0\).<br>
+        Радиус равен нулю, значит, ряд сходится только в точке \(x=0\).
+      </div></details>
+    </div></div>
+  </div>
+
+  <h3>Для самостоятельного решения</h3>
+  <div class="task"><div class="head"><div class="n">6.4</div><div class="body">\(\sum_{n=1}^{\infty} \frac{x^n}{n!}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">\(R = \infty\). Область \((-\infty, \infty)\).</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">6.5</div><div class="body">\(\sum_{n=1}^{\infty} n^n x^n\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">\(R = 0\). Область \(\{0\}\).</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">6.6</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(x+1)^n}{n^2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">\(R=1\), интервал \((-2, 0)\). На концах сходится (как \(\sum 1/n^2\)). Область \([-2, 0]\).</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">6.7</div><div class="body">\(\sum_{n=1}^{\infty} \frac{x^n}{\sqrt{n}}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">\(R=1\), интервал \((-1, 1)\). При \(x=1\) расходится, при \(x=-1\) сходится. Область \([-1, 1)\).</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">6.8</div><div class="body">\(\sum_{n=1}^{\infty} (-1)^n \frac{x^{2n}}{2n}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">Ряд по четным степеням. \(R=1\), сходится при \(|x|<1\). На концах расходится. Область \((-1, 1)\).</div></details></div></div></div>
+  <div class="task"><div class="head"><div class="n">6.9</div><div class="body">\(\sum_{n=1}^{\infty} \frac{(2x)^n}{n^2}\)<details class="hint answer"><summary>Показать ответ</summary><div class="content">\(R=1/2\), интервал \((-1/2, 1/2)\). На концах сходится. Область \([-1/2, 1/2]\).</div></details></div></div></div>
+
+</div>
+
+<button class="print-btn" type="button" onclick="window.print()">🖨️ Печать / PDF</button>
+
+<!-- Рекламный фон -->
+<div class="mm-ads-bg" aria-hidden="true">
+  <div class="mm-ads-watermark">
+    <div class="mm-ads-watermark__row">Мягкая математика · ОГЭ · ЕГЭ · Математика · Подготовка к экзаменам · Олимпиады ·</div>
+    <div class="mm-ads-watermark__row">Мягкая математика · ОГЭ · ЕГЭ · Математика · Подготовка к экзаменам · Олимпиады ·</div>
+  </div>
+  <div class="mm-ads-bg__inner">
+    <span class="mm-ads-bg__line">
+      Подготовка к ОГЭ, ЕГЭ и олимпиадам по математике в «Мягкой математике»
+    </span>
+    <span class="mm-ads-bg__line">
+      Подписывайся на группу:
+      <a href="https://vk.com/smartskillsmaria" target="_blank" rel="noopener">vk.com/smartskillsmaria</a>
+      &nbsp;·&nbsp;
+      Записаться: Мария Абрамова →
+      <a href="https://vk.com/im/convo/-229273902?entrypoint=community_page&tab=all" target="_blank" rel="noopener">написать в VK</a>
+    </span>
+  </div>
+</div>
+
+<script>
+  // JS для интерактивного навигатора
+  function showStep(stepId) {
+    // Скрыть все шаги
+    document.querySelectorAll('.nav-step').forEach(el => el.classList.remove('active'));
+    // Показать нужный шаг
+    const target = document.getElementById('step-' + stepId);
+    if (target) target.classList.add('active');
+  }
+
+  function showResult(resId) {
+    document.querySelectorAll('.nav-step').forEach(el => el.classList.remove('active'));
+    const target = document.getElementById('res-' + resId);
+    if (target) target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
